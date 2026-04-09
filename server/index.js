@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const Database = require('better-sqlite3');
 
 const app = express();
@@ -11,7 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 // Database 초기화
-const db = new Database(path.join(__dirname, 'db', 'jjinmak.db'));
+const dbDir = path.join(__dirname, 'db');
+if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+const db = new Database(path.join(dbDir, 'jjinmak.db'));
 db.pragma('journal_mode = WAL');
 
 db.exec(`
