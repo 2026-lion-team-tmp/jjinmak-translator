@@ -52,9 +52,6 @@ app.post('/api/translate', (req, res) => {
     } else {
       db.prepare('INSERT INTO players (name) VALUES (?)').run(trimmedName);
     }
-  } else {
-    const existing = db.prepare('SELECT play_count FROM players WHERE name = ?').get(trimmedName);
-    if (existing) playCount = existing.play_count;
   }
 
   res.json({ name: trimmedName, phrase, playCount });

@@ -1,6 +1,20 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 
+// 한글 대응 Base64 인코딩/디코딩
+function toBase64(obj) {
+  const json = JSON.stringify(obj);
+  const bytes = new TextEncoder().encode(json);
+  const binary = Array.from(bytes, (b) => String.fromCharCode(b)).join('');
+  return btoa(binary);
+}
+
+function fromBase64(str) {
+  const binary = atob(str);
+  const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
 function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -11,7 +25,7 @@ function ResultPage() {
     const q = searchParams.get('q');
     if (!q) return null;
     try {
-      const decoded = JSON.parse(atob(q));
+      const decoded = fromBase64(q);
       return {
         name: decoded.name,
         phrase: decoded.message,
@@ -73,7 +87,6 @@ function ResultPage() {
     });
     const data = await res.json();
 
-    // skipRanking이면 서버 playCount 대신 로컬 카운트 사용
     if (skipRanking) {
       localCount.current += 1;
       navigate('/result', {
@@ -91,11 +104,11 @@ function ResultPage() {
   };
 
   const handleShare = () => {
-    const payload = btoa(JSON.stringify({
+    const payload = toBase64({
       name,
       round: playCount,
       message: phrase,
-    }));
+    });
     const url = `${window.location.origin}/result?q=${payload}`;
     if (navigator.share) {
       navigator.share({ url });
