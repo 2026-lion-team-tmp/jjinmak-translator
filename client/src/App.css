@@ -1,1 +1,18 @@
-/* Tailwind CSS로 전환됨 — 스타일은 JSX 클래스에서 관리 */
+/* 마블 배경 + 어두운 오버레이 */
+.marble-bg {
+  position: relative;
+  background: url('/images/marble-bg.png') center/cover no-repeat fixed;
+}
+
+.marble-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.77);
+  z-index: 0;
+}
+
+.marble-bg > * {
+  position: relative;
+  z-index: 1;
+}

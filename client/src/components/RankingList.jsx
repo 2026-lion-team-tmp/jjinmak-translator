@@ -1,39 +1,93 @@
-const medals = ['👑', '🥈', '🥉'];
+/**
+ * 랭킹 스타일 — Figma에서 추출한 정확한 값
+ *
+ * 1위: 🏆 gold trophy, 번호 glow #fd0, 이름 semibold glow rgba(255,246,0,0.25)
+ * 2위: 🥈 silver trophy, 번호 glow white, 이름 regular glow white
+ * 3위: 🥉 bronze trophy, 번호 glow #b25c00, 이름 regular glow #df6c00
+ * 4~6위: 트로피 없음, 번호/이름 plain white
+ * 모든 번호: Kablammo 폰트, fontVariationSettings "'MORF' 40"
+ * 플레이횟수: #ff9cee, text-shadow 4px 0 10px #e0f
+ */
 
-export function RankingList({ rankings, friendName, setFriendName, dontRecord, setDontRecord }) {
+const RANK_STYLES = [
+  {
+    trophy: '🏆',
+    numShadow: '5px 0px 10px #ffdd00',
+    nameWeight: 600,
+    nameShadow: '5px 0px 10px rgba(255, 246, 0, 0.25)',
+  },
+  {
+    trophy: '🥈',
+    numShadow: '5px 0px 10px white',
+    nameWeight: 400,
+    nameShadow: '5px 0px 10px white',
+  },
+  {
+    trophy: '🥉',
+    numShadow: '5px 0px 10px #b25c00',
+    nameWeight: 400,
+    nameShadow: '5px 0px 10px #df6c00',
+  },
+];
+
+const KABLAMMO = { fontFamily: 'Kablammo, sans-serif', fontVariationSettings: "'MORF' 40" };
+const INTER = { fontFamily: "Inter, 'Noto Sans KR', sans-serif" };
+
+export function RankingList({ rankings }) {
+  // 6위까지만 표시
+  const items = rankings.slice(0, 6);
+
   return (
-    <div className="w-full max-w-md text-left space-y-4">
-      {/* Rankings */}
-      {rankings.map((player, i) => (
-        <div key={i} className="flex items-center gap-3 text-2xl">
-          <span className="text-3xl">{medals[i]}</span>
-          <span className="font-bold">{i + 1}등: {player.name}</span>
-          <span className="text-gray-400">- {player.play_count}판 째 게임중!</span>
-        </div>
-      ))}
+    <div className="flex flex-col gap-[8px] flex-1" style={INTER}>
+      {items.map((player, i) => {
+        const style = RANK_STYLES[i]; // undefined for 4~6위
+        const hasTrophy = i < 3;
 
-      {/* Input Field */}
-      <div className="flex items-center gap-3 text-2xl mt-6">
-        <input
-          type="text"
-          value={friendName}
-          onChange={(e) => setFriendName(e.target.value)}
-          placeholder="친구 이름 입력"
-          className="bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white text-xl w-48 focus:outline-none focus:border-purple-500"
-        />
-        <span className="text-gray-400">- ??판 째 게임중!</span>
-      </div>
+        return (
+          <div key={i} className="flex items-center gap-[8px]">
+            {/* 트로피 (1~3위만) */}
+            {hasTrophy ? (
+              <span className="text-[18px] w-[25px] text-center shrink-0">{style.trophy}</span>
+            ) : (
+              <span className="w-[25px] shrink-0" />
+            )}
 
-      {/* Don't Record Checkbox */}
-      <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer mt-2">
-        <input
-          type="checkbox"
-          checked={dontRecord}
-          onChange={(e) => setDontRecord(e.target.checked)}
-          className="w-4 h-4"
-        />
-        랭크에 기록 안 할래요.
-      </label>
+            {/* 순위 번호 — 모두 Kablammo 폰트 */}
+            <span
+              className="text-[20px] text-white text-center w-[34px] shrink-0"
+              style={{
+                ...KABLAMMO,
+                textShadow: style?.numShadow || 'none',
+              }}
+            >
+              {i + 1}
+            </span>
+
+            {/* 이름 */}
+            <span
+              className="text-[20px] text-white"
+              style={{
+                fontWeight: style?.nameWeight || 400,
+                textShadow: style?.nameShadow || 'none',
+              }}
+            >
+              {player.name}
+            </span>
+
+            {/* 플레이 횟수 — Figma: #ff9cee, 12px, text-shadow 4px 0 10px #e0f */}
+            <span
+              className="text-[12px] text-[#ff9cee] ml-auto whitespace-nowrap"
+              style={{ textShadow: '4px 0px 10px #ee00ff' }}
+            >
+              딴짓 {player.play_count}번 째!
+            </span>
+          </div>
+        );
+      })}
+
+      {items.length === 0 && (
+        <p className="text-[rgba(255,255,255,0.33)] text-[14px]">아직 랭킹이 없습니다.</p>
+      )}
     </div>
   );
 }
