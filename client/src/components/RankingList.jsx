@@ -65,7 +65,7 @@ export function RankingList({ rankings }) {
 
             {/* 이름 */}
             <span
-              className="text-[18px] md:text-[24px] text-white w-[4em] md:w-[5em] shrink-0"
+              className="text-[18px] md:text-[24px] text-white w-[5em] shrink-0 whitespace-nowrap"
               style={{
                 fontWeight: style?.nameWeight || 400,
                 textShadow: style?.nameShadow || 'none',
