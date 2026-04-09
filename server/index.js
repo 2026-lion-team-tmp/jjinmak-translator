@@ -71,7 +71,7 @@ app.post('/api/translate', (req, res) => {
 
 // API: 랭킹 조회 (TOP 6)
 app.get('/api/ranking', (req, res) => {
-  const rows = db.prepare('SELECT name, play_count FROM players ORDER BY play_count DESC LIMIT 6').all();
+  const rows = db.prepare('SELECT name, play_count FROM players ORDER BY play_count DESC LIMIT 20').all();
   res.json({ ranking: rows });
 });
 

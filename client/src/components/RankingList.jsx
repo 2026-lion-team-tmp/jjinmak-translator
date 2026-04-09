@@ -34,8 +34,7 @@ const KABLAMMO = { fontFamily: 'Kablammo, sans-serif', fontVariationSettings: "'
 const INTER = { fontFamily: "Inter, 'Noto Sans KR', sans-serif" };
 
 export function RankingList({ rankings }) {
-  // 6위까지만 표시
-  const items = rankings.slice(0, 6);
+  const items = rankings;
 
   return (
     <div className="flex flex-col items-center gap-[10px]" style={INTER}>
