@@ -78,7 +78,7 @@ export default function MainPage() {
           <input
             type="text"
             value={friendName}
-            onChange={(e) => { const v = e.target.value.replace(/[^가-힣]/g, ''); if (v.length <= 5) setFriendName(v); }}
+            onChange={(e) => { const v = e.target.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣]/g, ''); if (v.length <= 5) setFriendName(v); }}
             onKeyDown={(e) => e.key === 'Enter' && handleTranslate()}
             maxLength={5}
             placeholder="친구 이름이 뭐고?"
