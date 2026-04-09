@@ -27,19 +27,8 @@ db.exec(`
   )
 `);
 
-// 속마음 문구 목록
-const phrases = [
-  '이걸 더 안해??',
-  '너 없으면 어쩌려고 그래',
-  '사실 네가 제일 웃겨',
-  '너 때문에 힘들어 (좋은 의미)',
-  '다음 생에도 친구하자',
-  '솔직히 너 좀 부러워',
-  '너랑 있으면 시간이 왜 이렇게 빨라',
-  '가끔 네 생각나서 혼자 웃어',
-  '야 너 진짜 대단하다',
-  '너 없는 단톡방은 재미없어',
-];
+// 속마음 문구 목록 (server/phrases.json에서 관리)
+const phrases = JSON.parse(fs.readFileSync(path.join(__dirname, 'phrases.json'), 'utf-8'));
 
 // API: 속마음 번역하기
 app.post('/api/translate', (req, res) => {
