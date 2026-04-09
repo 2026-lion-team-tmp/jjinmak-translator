@@ -16,3 +16,13 @@
   position: relative;
   z-index: 1;
 }
+
+/* 스크롤바 숨기기 (스크롤 기능은 유지) */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

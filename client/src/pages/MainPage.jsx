@@ -116,7 +116,7 @@ export default function MainPage() {
         <div className="hidden md:block w-px bg-[rgba(255,255,255,0.1)] absolute left-[62%] top-[32px] bottom-[32px]" />
 
         {/* ===== 오른쪽: 랭킹 영역 (38%) ===== */}
-        <div className="w-full md:w-[38%] shrink-0 py-8 md:py-[50px] flex flex-col items-center overflow-y-auto">
+        <div className="w-full md:w-[38%] shrink-0 py-8 md:py-[50px] flex flex-col items-center overflow-y-auto hide-scrollbar">
 
           {/* 검색바 — 상단 중앙 */}
           <div className="relative mb-[16px]">
@@ -159,7 +159,7 @@ export default function MainPage() {
           )}
 
           {/* 랭킹 리스트 — 6위까지, 중앙 정렬 */}
-          <div className="mt-[24px]">
+          <div className="mt-[24px] max-h-[300px] overflow-y-auto hide-scrollbar">
             <RankingList rankings={rankings} />
           </div>
         </div>
