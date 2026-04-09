@@ -71,30 +71,10 @@ app.post('/api/translate', (req, res) => {
   res.json({ name: trimmedName, phrase, playCount });
 });
 
-// API: 랭킹 조회
+// API: 랭킹 조회 (TOP 3)
 app.get('/api/ranking', (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = 10;
-  const offset = (page - 1) * limit;
-  const search = req.query.search || '';
-
-  let rows, total;
-
-  if (search) {
-    rows = db.prepare('SELECT name, play_count FROM players WHERE name LIKE ? ORDER BY play_count DESC LIMIT ? OFFSET ?')
-      .all(`%${search}%`, limit, offset);
-    total = db.prepare('SELECT COUNT(*) as count FROM players WHERE name LIKE ?').get(`%${search}%`).count;
-  } else {
-    rows = db.prepare('SELECT name, play_count FROM players ORDER BY play_count DESC LIMIT ? OFFSET ?')
-      .all(limit, offset);
-    total = db.prepare('SELECT COUNT(*) as count FROM players').get().count;
-  }
-
-  res.json({
-    ranking: rows,
-    totalPages: Math.ceil(total / limit),
-    currentPage: page,
-  });
+  const rows = db.prepare('SELECT name, play_count FROM players ORDER BY play_count DESC LIMIT 3').all();
+  res.json({ ranking: rows });
 });
 
 // 프로덕션: React 빌드 파일 서빙
