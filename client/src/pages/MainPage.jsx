@@ -18,9 +18,13 @@ export default function MainPage() {
   }, []);
 
   const fetchRanking = async () => {
-    const res = await fetch('/api/ranking');
-    const data = await res.json();
-    setRankings(data.ranking);
+    try {
+      const res = await fetch('/api/ranking');
+      const data = await res.json();
+      setRankings(data.ranking);
+    } catch {
+      console.error('랭킹 조회 실패');
+    }
   };
 
   useEffect(() => {
@@ -30,10 +34,14 @@ export default function MainPage() {
       return;
     }
     const timer = setTimeout(async () => {
-      const res = await fetch(`/api/search?name=${encodeURIComponent(searchQuery.trim())}`);
-      const data = await res.json();
-      setSearchResult(data.result);
-      setSearched(true);
+      try {
+        const res = await fetch(`/api/search?name=${encodeURIComponent(searchQuery.trim())}`);
+        const data = await res.json();
+        setSearchResult(data.result);
+        setSearched(true);
+      } catch {
+        console.error('검색 실패');
+      }
     }, 200);
     return () => clearTimeout(timer);
   }, [searchQuery]);
@@ -44,17 +52,21 @@ export default function MainPage() {
       return;
     }
 
-    const res = await fetch('/api/translate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: friendName.trim(), skipRanking: dontRecord }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      alert(data.error || '오류가 발생했습니다.');
-      return;
+    try {
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: friendName.trim(), skipRanking: dontRecord }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || '오류가 발생했습니다.');
+        return;
+      }
+      navigate('/result', { state: { ...data, playCount: 1, skipRanking: dontRecord } });
+    } catch {
+      alert('네트워크 오류가 발생했습니다.');
     }
-    navigate('/result', { state: { ...data, playCount: 1, skipRanking: dontRecord } });
   };
 
   return (
@@ -126,7 +138,7 @@ export default function MainPage() {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => { const v = e.target.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣]/g, ''); if (v.length <= 5) setSearchQuery(v); }}
               placeholder="임마 어딨노?"
               className="w-[260px] h-[44px] md:h-[50px] bg-[rgba(255,255,255,0.23)] border border-[#fcbfff] rounded-[5px] px-[19px] pr-[44px] text-white text-[18px] md:text-[20px] placeholder-[rgba(255,255,255,0.33)] focus:outline-none focus:border-[#ff9cee]"
             />

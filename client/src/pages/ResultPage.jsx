@@ -88,19 +88,24 @@ export default function ResultPage() {
   }
 
   const handleRetry = async () => {
-    const res = await fetch('/api/translate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, skipRanking: skipRanking || false }),
-    });
-    const data = await res.json();
+    try {
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, skipRanking: skipRanking || false }),
+      });
+      const data = await res.json();
 
-    localCount.current += 1;
-    navigate('/result', {
-      state: { ...data, playCount: localCount.current, skipRanking, seenPhrases },
-      replace: true,
-    });
-    window.location.reload();
+      localCount.current += 1;
+      setPlayCount(localCount.current);
+      setIsSlotting(true);
+      navigate('/result', {
+        state: { ...data, playCount: localCount.current, skipRanking, seenPhrases },
+        replace: true,
+      });
+    } catch {
+      alert('네트워크 오류가 발생했습니다.');
+    }
   };
 
   const handleShare = async () => {
@@ -112,19 +117,15 @@ export default function ResultPage() {
     const url = `${window.location.origin}/result?q=${encodeURIComponent(payload)}`;
     if (navigator.share) {
       navigator.share({ url });
-    } else {
+    } else if (navigator.clipboard?.writeText) {
       try {
         await navigator.clipboard.writeText(url);
         alert('링크가 복사되었습니다!');
       } catch {
-        const textarea = document.createElement('textarea');
-        textarea.value = url;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        alert('링크가 복사되었습니다!');
+        alert('복사에 실패했습니다. 직접 복사해주세요: ' + url);
       }
+    } else {
+      alert('이 브라우저에서는 공유 기능을 지원하지 않습니다.');
     }
   };
 

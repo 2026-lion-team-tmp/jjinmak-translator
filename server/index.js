@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(express.json());
 
 // Database 초기화
@@ -27,8 +27,17 @@ db.exec(`
   )
 `);
 
-// 속마음 문구 목록 (server/phrases.json에서 관리)
-const phrases = JSON.parse(fs.readFileSync(path.join(__dirname, 'phrases.json'), 'utf-8'));
+// JSON 파일 안전 로드
+function loadJSON(filepath) {
+  try {
+    return JSON.parse(fs.readFileSync(filepath, 'utf-8'));
+  } catch (e) {
+    console.error(`${filepath} 로드 실패:`, e.message);
+    process.exit(1);
+  }
+}
+
+const phrases = loadJSON(path.join(__dirname, 'phrases.json'));
 
 // 신규 플레이어 일자별 로깅
 function logNewPlayer(name) {
@@ -48,7 +57,7 @@ function logNewPlayer(name) {
 }
 
 // 금지어 목록 (server/bannedWords.json에서 관리)
-const bannedWords = JSON.parse(fs.readFileSync(path.join(__dirname, 'bannedWords.json'), 'utf-8'));
+const bannedWords = loadJSON(path.join(__dirname, 'bannedWords.json'));
 
 // API: 속마음 번역하기
 app.post('/api/translate', (req, res) => {

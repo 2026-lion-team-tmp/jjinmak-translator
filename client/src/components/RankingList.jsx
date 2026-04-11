@@ -34,11 +34,9 @@ const KABLAMMO = { fontFamily: 'Kablammo, sans-serif', fontVariationSettings: "'
 const INTER = { fontFamily: "Inter, 'Noto Sans KR', sans-serif" };
 
 export function RankingList({ rankings }) {
-  const items = rankings;
-
   return (
     <div className="flex flex-col items-center gap-[10px]" style={INTER}>
-      {items.map((player, i) => {
+      {rankings.map((player, i) => {
         const style = RANK_STYLES[i]; // undefined for 4~6위
         const hasTrophy = i < 3;
 
@@ -84,7 +82,7 @@ export function RankingList({ rankings }) {
         );
       })}
 
-      {items.length === 0 && (
+      {rankings.length === 0 && (
         <p className="text-[rgba(255,255,255,0.33)] text-[14px]">아직 랭킹이 없습니다.</p>
       )}
     </div>
