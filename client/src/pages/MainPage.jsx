@@ -72,7 +72,7 @@ export default function MainPage() {
   return (
     <div className="marble-bg min-h-screen flex items-center justify-center p-6" style={{ fontFamily: FONT }}>
       {/* 메인 카드 — Figma: 885×389, rounded-30, bg-black */}
-      <div className="bg-black rounded-[20px] md:rounded-[30px] flex flex-col md:flex-row w-full max-w-[1200px] md:h-[540px] relative overflow-hidden">
+      <div className="bg-black rounded-[20px] md:rounded-[30px] flex flex-col md:flex-row w-full max-w-[1200px] md:h-[540px] relative md:overflow-hidden">
 
         {/* ===== 왼쪽: 입력 영역 ===== */}
         {/* Figma 좌표: 왼쪽 패딩 97px, 상단 패딩 ~40px */}

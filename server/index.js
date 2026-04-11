@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const Database = require('better-sqlite3');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,6 +11,15 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(express.json());
+
+// 번역 API Rate Limit (IP당 1초 5회)
+const translateLimiter = rateLimit({
+  windowMs: 1000,
+  max: 5,
+  message: { error: '너무 빨리 누르고 있데이! 잠시 후 다시 해봐라.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Database 초기화
 const dbDir = path.join(__dirname, 'db');
@@ -60,7 +70,7 @@ function logNewPlayer(name) {
 const bannedWords = loadJSON(path.join(__dirname, 'bannedWords.json'));
 
 // API: 속마음 번역하기
-app.post('/api/translate', (req, res) => {
+app.post('/api/translate', translateLimiter, (req, res) => {
   const { name, skipRanking } = req.body;
 
   if (!name || !name.trim()) {
