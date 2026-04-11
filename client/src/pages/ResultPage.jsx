@@ -95,6 +95,10 @@ export default function ResultPage() {
         body: JSON.stringify({ name, skipRanking: skipRanking || false }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || '오류가 발생했습니다.');
+        return;
+      }
 
       localCount.current += 1;
       setPlayCount(localCount.current);
@@ -178,10 +182,10 @@ export default function ResultPage() {
         </div>
 
         {/* 버튼들 */}
-        <div className="flex justify-center gap-2 md:gap-4">
+        <div className="flex justify-center gap-2 md:gap-4 flex-wrap">
           <button
             onClick={handleShare}
-            className="text-white rounded-full font-bold transition-colors w-[110px] md:w-[150px] h-[40px] md:h-[48px] flex items-center justify-center gap-[6px] text-[13px] md:text-[16px] hover:brightness-110"
+            className="text-white rounded-full font-bold transition-colors w-[90px] md:w-[150px] h-[36px] md:h-[48px] flex items-center justify-center gap-[4px] md:gap-[6px] text-[11px] md:text-[16px] hover:brightness-110"
             style={{ ...NEODGM, backgroundColor: '#9CB5FF' }}
           >
             <img src="/images/send.svg" alt="" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] shrink-0 object-contain" />
@@ -189,7 +193,7 @@ export default function ResultPage() {
           </button>
           <button
             onClick={handleRetry}
-            className="bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-colors w-[130px] md:w-[180px] h-[40px] md:h-[48px] flex items-center justify-center gap-[6px] text-[14px] md:text-[18px]"
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-colors w-[100px] md:w-[180px] h-[36px] md:h-[48px] flex items-center justify-center gap-[4px] md:gap-[6px] text-[12px] md:text-[18px]"
             style={{ ...NEODGM, fontWeight: 900, boxShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.3)' }}
           >
             <img src="/images/reroll.svg" alt="" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] shrink-0 object-contain" />
@@ -197,7 +201,7 @@ export default function ResultPage() {
           </button>
           <button
             onClick={() => navigate('/', { state: { resetSeen: true } })}
-            className="bg-gray-600 hover:bg-gray-700 text-white rounded-full font-bold transition-colors w-[110px] md:w-[150px] h-[40px] md:h-[48px] flex items-center justify-center gap-[6px] text-[13px] md:text-[16px]"
+            className="bg-gray-600 hover:bg-gray-700 text-white rounded-full font-bold transition-colors w-[90px] md:w-[150px] h-[36px] md:h-[48px] flex items-center justify-center gap-[4px] md:gap-[6px] text-[11px] md:text-[16px]"
             style={NEODGM}
           >
             <img src="/images/back.svg" alt="" className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] shrink-0 object-contain" />

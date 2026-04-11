@@ -15,7 +15,7 @@ app.use(express.json());
 // 번역 API Rate Limit (IP당 1초 5회)
 const translateLimiter = rateLimit({
   windowMs: 1000,
-  max: 5,
+  max: 10,
   message: { error: '너무 빨리 누르고 있데이! 잠시 후 다시 해봐라.' },
   standardHeaders: true,
   legacyHeaders: false,
