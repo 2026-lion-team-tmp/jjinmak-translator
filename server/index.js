@@ -30,6 +30,23 @@ db.exec(`
 // 속마음 문구 목록 (server/phrases.json에서 관리)
 const phrases = JSON.parse(fs.readFileSync(path.join(__dirname, 'phrases.json'), 'utf-8'));
 
+// 신규 플레이어 일자별 로깅
+function logNewPlayer(name) {
+  const logsDir = path.join(__dirname, 'db', 'logs');
+  if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+
+  const today = new Date().toISOString().slice(0, 10);
+  const logFile = path.join(logsDir, `${today}.json`);
+  const now = new Date().toISOString().slice(11, 19);
+
+  let entries = [];
+  if (fs.existsSync(logFile)) {
+    entries = JSON.parse(fs.readFileSync(logFile, 'utf-8'));
+  }
+  entries.push({ name, time: now });
+  fs.writeFileSync(logFile, JSON.stringify(entries, null, 2));
+}
+
 // 금지어 목록 (server/bannedWords.json에서 관리)
 const bannedWords = JSON.parse(fs.readFileSync(path.join(__dirname, 'bannedWords.json'), 'utf-8'));
 
@@ -63,6 +80,7 @@ app.post('/api/translate', (req, res) => {
       playCount = existing.play_count + 1;
     } else {
       db.prepare('INSERT INTO players (name) VALUES (?)').run(trimmedName);
+      logNewPlayer(trimmedName);
     }
   }
 
