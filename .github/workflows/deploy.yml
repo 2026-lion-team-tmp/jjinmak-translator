@@ -43,7 +43,7 @@ jobs:
             docker rm jjinmak || true
             docker run -d \
               --name jjinmak \
-              -p 80:5000 \
+              -p 5000:5000 \
               -v ~/jjinmak-data:/app/db \
               --restart unless-stopped \
               ${{ secrets.DOCKERHUB_USERNAME }}/jjinmak-translator:latest
